@@ -21,8 +21,8 @@ var DETAIL_WINDOW = {};
 			win.add(webView);			
 		}
 
-		webView.url = "http://en.wikipedia.org/wiki/" + evtData.title;
-		
+		//webView.url = "http://en.wikipedia.org/wiki/" + evtData.title;
+		webView.url = evtData.title;
 	}
 	
 	/**
