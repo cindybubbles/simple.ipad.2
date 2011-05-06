@@ -1,10 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <ti:app xmlns:ti="http://ti.appcelerator.org">
+    <deployment-targets>
+        <target device="ipad">true</target>
+    </deployment-targets>
 <id>simple.ipad.2</id>
 <name>simple.ipad.2</name>
 <version>1.0</version>
 <publisher>aaronksaunders</publisher>
-<url>simple.ipad</url>
+<url>http://www.brunico.com/simple.ipad.2</url>
 <description>No description provided</description>
 <copyright>2011 by aaronksaunders</copyright>
 <icon>default_app_logo.png</icon>

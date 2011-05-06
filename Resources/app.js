@@ -5,12 +5,12 @@ SplitViewApp = {};
 SplitViewApp.masterWindow = Ti.UI.createWindow({
     title:'Master',
     backgroundColor: '#fff',
-    url:'master_list.js'
+    url:'brunico_list.js'
 });
 SplitViewApp.detailWindow = Ti.UI.createWindow({
     title:'Detail',
     backgroundColor: '#fff',
-    url:'detail.js'
+    url:'brunico_detail.js'
 });
 
 
