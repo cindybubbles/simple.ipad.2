@@ -69,7 +69,7 @@ xhr.onload = function()
 			"title": e.row.url 
 		}
 		Ti.App.fireEvent('app:rowClicked', evtData);
-
+ad
 	}
 		
 		
