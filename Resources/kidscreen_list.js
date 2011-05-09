@@ -5,13 +5,14 @@ var MASTER_WINDOW = {};
 	var url = 'http://kidscreen.com/feed/';
 	var navGroup = win.navGroup;
 	var brunicoData = [];
+	Ti.include('feed_reader.js');
+	Ti.include('sql_lite.js');
 	var tableview = Titanium.UI.createTableView({
 			data:brunicoData
 		});
 	Ti.include("feed_reader.js");
-	Ti.include("sql_lite.js");
-	FEED_READER.display_feed(url, brunicoData, tableview);
-
+	var feeds = SQL_LITE_BACKEND.load_local_feeds('KS');
+	FEED_READER.display_local_feed(feeds,brunicoData,tableview);
     /**
 	* on click event, fireEvent, detail window is listening
 	*/

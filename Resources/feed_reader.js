@@ -45,5 +45,12 @@ var FEED_READER = {};
 		}
 		tableview.setData(datalist);
 	}
-	
+	FEED_READER.display_local_feed = function(feeds, datalist, tableview){
+		for (var f=0;f<feeds.length;f++){
+			var feed = feeds.currentFeed[f];
+			var row = Ti.UI.createTableViewRow({title:feed.title, height:80, width:'100%', url:feed.url});
+			datalist.push(row);
+		}
+		tableview.setData(datalist);
+	}
 })();

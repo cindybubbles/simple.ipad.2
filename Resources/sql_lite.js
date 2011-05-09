@@ -8,7 +8,7 @@ var SQL_LITE_BACKEND = {};
 		var conn = Ti.Database.install("db/brunico.sqlite","brunico");
 		var i = 0;
 		for(i=0; i<brand_list.length; i++) {
-			conn.execute('CREATE TABLE IF NOT EXISTS '+ brand_list[i] +' (id INTEGER PRIMARY KEY, title TEXT, url TEXT)');	
+			conn.execute('CREATE TABLE IF NOT EXISTS '+ brand_list[i] +' (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, title TEXT, url TEXT)');	
 		}
 		conn.close();
 	}
@@ -22,7 +22,7 @@ var SQL_LITE_BACKEND = {};
 			feeds = Titanium.App.Properties.getList('feeds');
 			for(var j=0;j<feeds.length;j++) {
 				try{
-					conn.execute('INSERT INTO '+ brand_list[i].db_name + ' VALUES (?,?,?)',feeds[j].id,feeds[j].title,feeds[j].url);				
+					conn.execute('INSERT INTO '+ brand_list[i].db_name + '(title,url) VALUES (?,?)',feeds[j].title,feeds[j].url);				
 				}
 				catch(ext){
 					alert(ext.message);
@@ -36,7 +36,7 @@ var SQL_LITE_BACKEND = {};
 		var row = conn.execute('SELECT * FROM '+brand_name);
 		var feeds = [];
 		while (row.isValidRow()){
-			var feed = {id:rs.field(0),title:rs.field(1),url:rs.field(2)};
+			var feed = {id:row.field(0),title:row.field(1),url:row.field(2)};
 			feeds.push(feed);
 		}
 		conn.close();
