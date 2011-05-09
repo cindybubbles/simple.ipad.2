@@ -11,7 +11,7 @@ var MASTER_WINDOW = {};
 		});
 	Ti.include("feed_reader.js");
 	xhr.onload = function () {
-		FEED_WINDOW.read_feed(this, brunicoData, tableview);
+		FEED_READER.read_feed(this, brunicoData, tableview);
 	}
 	xhr.open('GET',url);
     xhr.send();
