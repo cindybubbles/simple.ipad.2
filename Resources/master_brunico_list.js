@@ -1,11 +1,11 @@
 var BRUNICO_LIST = {};
 (function(){
-	
+BRUNICO_LIST.url = "http://kidscreen.com/feed/";
 
 // create table view data object
 var data = [];
-var db = Ti.Database.open('feedDB');
-db.execute('CREATE TABLE IF NOT EXISTS tblfeed (title VARCHAR(16) NOT NULL, url VARCHAR(16) NOT NULL)');
+var db = Ti.Database.install('db/brunico.sqlite','tblfeed');
+db.execute('CREATE TABLE IF NOT EXISTS tblfeed (id INTETER PRIMARY KEY AUTOINCREMENT, title VARCHAR(16) NOT NULL, url VARCHAR(16) NOT NULL, description VARCHAR(4000))');
 BRUNICO_LIST.update = function(url) {
 	var xhr = Ti.Network.createHTTPClient();
 	xhr.open("GET",url);
@@ -13,7 +13,7 @@ BRUNICO_LIST.update = function(url) {
 		try	{	
 		
 			db.execute('DELETE FROM tblfeed');
-		
+			
 			var doc = this.responseXML.documentElement;
 			var items = doc.getElementsByTagName("item");
 			var x = 0;
@@ -23,7 +23,8 @@ BRUNICO_LIST.update = function(url) {
 				var item = items.item(c);			
 				var title = item.getElementsByTagName("title").item(0).text;
 				var url = item.getElementsByTagName("link").item(0).text;
-				db.execute('INSERT INTO tblfeed (title,url) VALUES (?,?)',title,url);
+				var description = item.getElementsByTagName("description").item(0).text;
+				db.execute('INSERT INTO tblfeed (title,url,description) VALUES (?,?,?)',title,url,description);
 			}
 		}
 		catch(E) {
@@ -35,14 +36,14 @@ BRUNICO_LIST.update = function(url) {
 BRUNICO_LIST.show = function(data) {
 	try
 	{
-var feedRS = db.execute('SELECT title,url FROM tblfeed');
+var feedRS = db.execute('SELECT title,url,description FROM tblfeed');
 		
 		var x = 0;
 		while (feedRS.isValidRow())
 		{
 		  var title = feedRS.fieldByName('title');
 		  var url = feedRS.fieldByName('url');
-
+		  var description = feedRS.fieldByName('description');
 		  var row = Ti.UI.createTableViewRow({height:50});
 		  var label = Ti.UI.createLabel({
 					text:title,
@@ -54,8 +55,10 @@ var feedRS = db.execute('SELECT title,url FROM tblfeed');
 			row.add(label);
 			data[x++] = row;
 			row.url = url;
+		  row.description2 = description;
 		  
-		  Ti.API.info(title + ' ' + url + ' ');
+				
+		  Ti.API.info(title + ' ' + url + ' ' + description + ' ');
 		  feedRS.next();
 		}
 		feedRS.close();
@@ -63,13 +66,18 @@ var feedRS = db.execute('SELECT title,url FROM tblfeed');
 		var tableview = Titanium.UI.createTableView({data:data});
 		Titanium.UI.currentWindow.add(tableview);
 		tableview.addEventListener('click',tableClick);			
-		
+		tableview.addEventListener('scrollEnd',refresh);
+		function refresh(e) {
+			BRUNICO_LIST.update(BRUNICO_LIST.url);
+			BRUNICO_LIST.show(data);
+		}
 		function tableClick(e) {
 		var evtData = {
 			"row" : e.doctitle,
 			"title": e.row.url,
-			"url":e.row.url
-		}
+			"url":e.row.url,
+			"description2":e.row.description2
+		};
 		Ti.App.fireEvent('app:rowClicked', evtData);
 		}
 	}
@@ -78,7 +86,7 @@ var feedRS = db.execute('SELECT title,url FROM tblfeed');
 	}
 }
 if (Titanium.Network.networkType != Titanium.Network.NETWORK_NONE) {
-	BRUNICO_LIST.update("http://kidscreen.com/feed/");	
+	BRUNICO_LIST.update(BRUNICO_LIST.url);	
 }
 else {
 	alert('No internet connection could be found. The system will not be able to update the data until then.');
