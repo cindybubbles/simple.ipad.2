@@ -64,12 +64,17 @@ var feedRS = db.execute('SELECT title,url,description FROM tblfeed');
 		feedRS.close();
 		
 		var tableview = Titanium.UI.createTableView({data:data});
+		var button = Titanium.UI.createButton({title:'Update!', width:100, height:30, top:500});
 		Titanium.UI.currentWindow.add(tableview);
+		Titanium.UI.currentWindow.add(button);
 		tableview.addEventListener('click',tableClick);			
 		tableview.addEventListener('scrollEnd',refresh);
+		button.addEventListener('click',refresh);
 		function refresh(e) {
+			button.title = "Updating...";
 			BRUNICO_LIST.update(BRUNICO_LIST.url);
 			BRUNICO_LIST.show(data);
+			button.title = "Update again!";
 		}
 		function tableClick(e) {
 		var evtData = {
