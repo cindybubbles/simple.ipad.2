@@ -33,7 +33,7 @@ BRUNICO_LIST.update = function(url) {
 	};
 	xhr.send();
 };
-BRUNICO_LIST.show = function(data) {
+BRUNICO_LIST.show = function(data, btitle) {
 	try
 	{
 var feedRS = db.execute('SELECT title,url,description FROM tblfeed');
@@ -64,7 +64,7 @@ var feedRS = db.execute('SELECT title,url,description FROM tblfeed');
 		feedRS.close();
 		
 		var tableview = Titanium.UI.createTableView({data:data});
-		var button = Titanium.UI.createButton({title:'Update!', width:100, height:30, top:500});
+		var button = Titanium.UI.createButton({title:btitle, width:200, height:30, top:500});
 		Titanium.UI.currentWindow.add(tableview);
 		Titanium.UI.currentWindow.add(button);
 		tableview.addEventListener('click',tableClick);			
@@ -73,8 +73,7 @@ var feedRS = db.execute('SELECT title,url,description FROM tblfeed');
 		function refresh(e) {
 			button.title = "Updating...";
 			BRUNICO_LIST.update(BRUNICO_LIST.url);
-			BRUNICO_LIST.show(data);
-			button.title = "Update again!";
+			BRUNICO_LIST.show(data,"Update Again!");
 		}
 		function tableClick(e) {
 		var evtData = {
@@ -96,5 +95,5 @@ if (Titanium.Network.networkType != Titanium.Network.NETWORK_NONE) {
 else {
 	alert('No internet connection could be found. The system will not be able to update the data until then.');
 }
-BRUNICO_LIST.show(data);
+BRUNICO_LIST.show(data,'Update!');
 })();
