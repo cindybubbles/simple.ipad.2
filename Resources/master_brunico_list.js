@@ -39,6 +39,8 @@ BRUNICO_LIST.show = function(data, btitle) {
 var feedRS = db.execute('SELECT title,url,description FROM tblfeed');
 		
 		var x = 0;
+		var buttonTop = 0;
+		
 		while (feedRS.isValidRow())
 		{
 		  var title = feedRS.fieldByName('title');
@@ -53,7 +55,8 @@ var feedRS = db.execute('SELECT title,url,description FROM tblfeed');
 					right:5				
 				});
 			row.add(label);
-			data[x++] = row;
+			buttonTop += row.height;
+			data.push(row);
 			row.url = url;
 		  row.description2 = description;
 		  
@@ -62,16 +65,21 @@ var feedRS = db.execute('SELECT title,url,description FROM tblfeed');
 		  feedRS.next();
 		}
 		feedRS.close();
+		var buttonRow = Ti.UI.createTableViewRow({height:30});
+		var button = Titanium.UI.createButton({title:btitle, width:200, height:30, top:0});
+		buttonRow.add(button);
+		
+		data.push(buttonRow);
 		
 		var tableview = Titanium.UI.createTableView({data:data});
-		var button = Titanium.UI.createButton({title:btitle, width:200, height:30, top:500});
+		
 		Titanium.UI.currentWindow.add(tableview);
-		Titanium.UI.currentWindow.add(button);
 		tableview.addEventListener('click',tableClick);			
 		tableview.addEventListener('scrollEnd',refresh);
 		button.addEventListener('click',refresh);
 		function refresh(e) {
 			button.title = "Updating...";
+			data = [];
 			BRUNICO_LIST.update(BRUNICO_LIST.url);
 			BRUNICO_LIST.show(data,"Update Again!");
 		}
